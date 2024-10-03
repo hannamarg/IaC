@@ -1,3 +1,7 @@
+locals {
+  workspaces_suffix = terraform.workspace == "default" ? "" : "${terraform.workspace}"
+}
+
 terraform {
   required_providers {
     azurerm = {
@@ -15,7 +19,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "hmhd-rg" {
-  name     = "rg-demo-we"
+  name     = "rg-hmhd-we-${local.workspaces_suffix}"
   location = var.location
 }
 

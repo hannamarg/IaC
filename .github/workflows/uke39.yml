@@ -7,7 +7,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     paths:
-      - 'course materials/module06/staticwebsite/**'
+      - 'uke 39**'
 
 
 
@@ -24,7 +24,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      WORKING_DIR: ./course materials/module06/staticwebsite
+      WORKING_DIR: ./uke 39
       
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
