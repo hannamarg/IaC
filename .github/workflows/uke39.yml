@@ -27,15 +27,28 @@ jobs:
       WORKING_DIR: "./uke 39"
       
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
+    jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4.1.1
+      dev_stage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
 
       # Runs a single command using the runners shell
       - name: 'Terraform init'
         id: init
         run: terraform init
-        working-directory: ${{ env.WORKING_DIR }}          
+        working-directory: ${{ env.WORKING_DIR }}        
+        
+      - name: 'Terraform workspace select or create dev'
+        id: workspace
+        run: terraform workspace select dev || terraform workspace new dev
+        working-directory: ${{ env.WORKING_DIR }}  
+
+      - name: 'terraform apply dev'
+        run: terraform apply -auto-approve
+        working-directory: ${{ env.WORKING_DIR }}  
 
       - name: 'Terraform plan'
         id: plan
@@ -53,3 +66,44 @@ jobs:
             terraform apply -auto-approve
           fi
         working-directory: ${{ env.WORKING_DIR }} 
+
+      stage_prod:
+      needs: dev_stage
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4.1.1
+      
+        - name: Terraform init
+          run: terraform init
+          working-directory: ${{ env.WORKING_DIR }}
+        
+        - name: Terraform workspace select or create stage
+          run: terraform workspace select stage || terraform workspace new stage
+          working-directory: ${{ env.WORKING_DIR }}
+      
+        - name: Terraform apply stage
+          run: terraform apply -auto-approve
+          working-directory: ${{ env.WORKING_DIR }}
+
+
+        prod:
+    needs: stage_prod
+    runs-on: ubuntu-latest
+    environment: 
+      name: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+      
+      - name: Terraform init
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIR }}
+        
+      - name: Terraform workspace select or create prod
+        run: terraform workspace select prod || terraform workspace new prod
+        working-directory: ${{ env.WORKING_DIR }}
+      
+      - name: Terraform apply prod
+        run: terraform apply -auto-approve
+        working-directory: ${{ env.WORKING_DIR }}
