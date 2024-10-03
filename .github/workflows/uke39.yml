@@ -26,45 +26,45 @@ on:
       dev_stage:
       runs-on: ubuntu-latest
       steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.1
+        - name: Checkout
+          uses: actions/checkout@v4.1.1
 
       # Runs a single command using the runners shell
-      - name: 'Terraform init'
-        id: init
-        run: terraform init
-        working-directory: ${{ env.WORKING_DIR }}        
+        - name: 'Terraform init'
+          id: init
+          run: terraform init
+          working-directory: ${{ env.WORKING_DIR }}        
         
-      - name: 'Terraform workspace select or create dev'
-        id: workspace
-        run: terraform workspace select dev || terraform workspace new dev
-        working-directory: ${{ env.WORKING_DIR }}  
+        - name: 'Terraform workspace select or create dev'
+          id: workspace
+          run: terraform workspace select dev || terraform workspace new dev
+          working-directory: ${{ env.WORKING_DIR }}  
 
-      - name: 'terraform apply dev'
-        run: terraform apply -auto-approve
-        working-directory: ${{ env.WORKING_DIR }}  
+        - name: 'terraform apply dev'
+          run: terraform apply -auto-approve
+          working-directory: ${{ env.WORKING_DIR }}  
 
-      - name: 'Terraform plan'
-        id: plan
-        run: terraform plan
-        working-directory: ${{ env.WORKING_DIR }} 
+        - name: 'Terraform plan'
+          id: plan
+          run: terraform plan
+          working-directory: ${{ env.WORKING_DIR }} 
                     
-      - name: 'Check last commit message'
-        id: commit
-        run: echo "::set-output name=message::$(git log --format=%B -n 1)"
-      - name: 'Conditionally run Terraform action'
-        run: |
-          if [[ "${{ steps.commit.outputs.message }}" == *"destroy"* ]]; then
-            terraform destroy -auto-approve
-          else
-            terraform apply -auto-approve
-          fi
+        - name: 'Check last commit message'
+          id: commit
+          run: echo "::set-output name=message::$(git log --format=%B -n 1)"
+        - name: 'Conditionally run Terraform action'
+          run: |
+            if [[ "${{ steps.commit.outputs.message }}" == *"destroy"* ]]; then
+              terraform destroy -auto-approve
+            else
+              terraform apply -auto-approve
+            fi
         working-directory: ${{ env.WORKING_DIR }} 
 
       stage_prod:
-      needs: dev_stage
-      runs-on: ubuntu-latest
-      steps:
+        needs: dev_stage
+        runs-on: ubuntu-latest
+        steps:
           - name: Checkout
             uses: actions/checkout@v4.1.1
       
@@ -81,10 +81,10 @@ on:
             working-directory: ${{ env.WORKING_DIR }}
 
       prod:
-      needs: stage_prod
-      runs-on: ubuntu-latest
+        needs: stage_prod
+        runs-on: ubuntu-latest
         environment: 
-        name: prod
+          name: prod
         steps:
           - name: Checkout
             uses: actions/checkout@v4.1.1
