@@ -33,7 +33,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
 
   stage_prod:
-    needs: dev_stage
+    needs: test_stage
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
