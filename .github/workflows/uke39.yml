@@ -14,7 +14,7 @@ env:
   WORKING_DIR: "./uke 39"
 
 jobs:
-  dev_stage:
+  test_stage:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,16 +24,12 @@ jobs:
         run: terraform init
         working-directory: ${{ env.WORKING_DIR }}
         
-      - name: Terraform workspace select or create dev
-        run: terraform workspace select dev || terraform workspace new dev
+      - name: Terraform workspace select or create test
+        run: terraform workspace select test || terraform workspace new test
         working-directory: ${{ env.WORKING_DIR }}
       
-      - name: Terraform apply dev
+      - name: Terraform apply test
         run: terraform apply -auto-approve
-        working-directory: ${{ env.WORKING_DIR }}
-
-      - name: Test dev
-        run: curl $(terraform output -raw primary_web_endpoint)
         working-directory: ${{ env.WORKING_DIR }}
 
   stage_prod:
