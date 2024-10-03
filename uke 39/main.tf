@@ -19,7 +19,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "hmhd-rg" {
-  name     = "rg-hmhd-${local.workspaces_suffix}"
+  name     = "rg-hmhd-we-${local.workspaces_suffix}"
   location = var.location
 }
 
