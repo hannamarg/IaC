@@ -24,7 +24,7 @@ resource "azurerm_resource_group" "hmhd-rg" {
 }
 
 resource "azurerm_storage_account" "sa-demo" {
-  name                     = "hmhddemo-nyttnavn"
+  name                     = "hmhddemonyttnavn"
   resource_group_name      = azurerm_resource_group.hmhd-rg.name
   location                 = azurerm_resource_group.hmhd-rg.location
   account_tier             = "Standard"
